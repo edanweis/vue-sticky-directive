@@ -144,7 +144,16 @@ class Sticky {
         sticked: this.state.isBottomSticky || this.state.isTopSticky,
       };
       if (typeof this.options.onStick === 'function') this.options.onStick(this.lastState);
-      if (this.vnode.data && this.vnode.data.on && this.vnode.data.on.stick) this.vnode.data.on.stick(this.lastState)
+      this.emit(this.vnode, 'stick' , this.lastState);
+    }
+  }
+  
+  emit(vnode, name, data){
+    var handlers = (vnode.data && vnode.data.on) ||
+      (vnode.componentOptions && vnode.componentOptions.listeners);
+
+    if (handlers && handlers[name]) {
+      handlers[name].fns(data);
     }
   }
 
